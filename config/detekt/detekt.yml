@@ -56,7 +56,7 @@ performance:
     active: true  # 가변 인자 * 사용 제한
 
 # Compose 관련
-Compose:
+compose:
   ComposableNaming:
     active: true  # 대문자 시작 명사 강제
 
