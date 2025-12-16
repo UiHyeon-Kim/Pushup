@@ -16,7 +16,7 @@ complexity:
     active: true
     thresholdInClasses: 15  # 클래스에 최대 15개 함수
 
-  CyclomaticComplexity:
+  CyclomaticComplexMethod:
     active: true
     threshold: 15  # if / when / for 등 최대 15
 
