@@ -1,6 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+
+    id("io.gitlab.arturbosch.detekt")
+}
+
+detekt {
+    config = files("$rootDir/config/detekt/detekt-common.yml")
+    buildUponDefaultConfig = true
 }
 
 android {

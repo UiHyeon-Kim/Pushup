@@ -46,6 +46,8 @@ naming:
   FunctionNaming:
     active: true
     functionPattern: '[a-z][A-Za-z0-9]*'  # 함수 이름은 소문자로 시작하는 카멜 케이스
+    ignoreAnnotated:
+      - Composable
 
   VariableNaming:
     active: true  # 변수 이름 표준 규칙 강제
@@ -54,14 +56,3 @@ naming:
 performance:
   SpreadOperator:
     active: true  # 가변 인자 * 사용 제한
-
-# Compose 관련
-compose:
-  ComposableNaming:
-    active: true  # 대문자 시작 명사 강제
-
-  ComposableFunctionNaming:
-    active: true  # 대문자 시작 명사 강제
-
-  MutableParams:
-    active: true  # 변경 가능한 파라미터 주입 방지

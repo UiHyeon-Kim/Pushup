@@ -2,6 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("io.gitlab.arturbosch.detekt")
+}
+
+detekt {
+    config = files(
+        "$rootDir/config/detekt/detekt-common.yml",
+        "$rootDir/config/detekt/detekt-compose.yml",
+    ) // 커스텀 룰셋 파일 경로
+    buildUponDefaultConfig = true   // detekt 기본 룰 + 커스텀 룰
+    allRules = false    // 모든 룰셋 적용 - 명시적 false 시킴
 }
 
 android {
@@ -34,6 +45,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    lint {
+        abortOnError = true         // CI에서 실패 처리
+        checkDependencies = true    // 모듈 포함 검사
+        ignoreTestSources = true    // 테스트 코드 무시
+        warningsAsErrors = false    // 경고를 에러로 처리
+    }
 }
 
 dependencies {
@@ -56,4 +74,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    detektPlugins(libs.detekt.compose)
 }
