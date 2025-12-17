@@ -1,0 +1,60 @@
+# CI 목적
+# - Kotlin 코드 품질 검증 (detekt)
+# - Android / Compose Lint 검사
+# - 초기엔 빌드/테스트 제외
+
+name: CI
+
+# workflow 실행 제어
+on:
+  # push 또는 pull 요청에 대해서 워크플로우 트리거
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+  # Actions 탭에서 수동으로 실행할 수 있는 버튼 생성
+  workflow_dispatch:
+
+# 워크플로우 트리거 시 순차 또는 병렬로 실행될 작업 목록
+jobs:
+  # 'build'라는 이름을 가진 작업 (변경 가능)
+  build:
+    # 작업이 실행될 러너?
+    runs-on: ubuntu-latest
+
+    # 'build' 에서 실행될 태스크
+    steps:
+      # 깃허브 레포지토리 코드 가져오기. PR 기준 자동 적용
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: SetupJDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 빌드 시간 감소를 위한 캐시
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Run detekt
+        run: ./gradlew detekt
+
+      - name: Run Android Lint
+        run: ./gradlew lintDebug
+
+      # 테스트 코드 작성 후 활성화
+#      - name: Unit Test
+#        run: ./gradlew testDebugUnitTest
+
+      # 컴파일, 리소스 처리, 의존성 검증
+      # release 브랜치 도입 후 활성화 고려
+#      - name: Assemble Debug
+#        run: ./gradlew assembleDebug
