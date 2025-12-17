@@ -51,6 +51,8 @@ android {
         checkDependencies = true    // 모듈 포함 검사
         ignoreTestSources = true    // 테스트 코드 무시
         warningsAsErrors = false    // 경고를 에러로 처리
+
+        lintConfig = file("$rootDir/config/lint/lint.xml")
     }
 }
 

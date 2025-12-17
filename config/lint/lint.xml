@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <!--
+        Lint 단계적 도입
+        1단계: Compose 상태 관련 버그만 error
+        2단계: 접근성 / 문자열 관리 warning
+        3단계: 배포 전 error로 승격
+    -->
 
     <!-- 접근성 - 이미지나 아이콘에 시각 장애인을 위한 설명 텍스트 -->
-    <issue id="MissingContentDescription" severity="error"/>
+<!--    <issue id="MissingContentDescription" severity="error"/>-->
 
     <!-- Compose 상태 -->
     <!-- mutableStateOf를 사용하면서 remember를 사용하지 않았을 때 -->
@@ -16,9 +22,9 @@
 
     <!-- 리소스 관리 -->
     <!-- 프로젝트 내 사용되지 않는 이미지, 레이아웃, XML, 문자열 등 -->
-    <issue id="UnusedResources" severity="warning"/>
+<!--    <issue id="UnusedResources" severity="warning"/>-->
     <!-- UI에 노출되는 문자열을 string.xml 에 등록하지 않았을 때 -->
-    <issue id="HardcodedText" severity="warning"/>
+<!--    <issue id="HardcodedText" severity="warning"/>-->
 
     <!-- 의미 없는 Typography 룰 비활성 -->
     <issue id="TypographyFractions" severity="ignore"/>
