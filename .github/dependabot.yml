@@ -1,0 +1,9 @@
+# 라이브러리 자동 업데이트 PR 생성
+
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
