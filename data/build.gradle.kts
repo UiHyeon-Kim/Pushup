@@ -51,8 +51,6 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.truth)      // 테스트를 읽기 좋게 작성할 수 있음
     testImplementation(libs.turbine)    // Flow 테스트 작성용
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
     // room
     implementation(libs.androidx.room.ktx)
