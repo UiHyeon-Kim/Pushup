@@ -1,7 +1,14 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: ko-KR
 reviews:
+  profile: assertive
+  request_changes_workflow: true
+  auto_apply_labels: true
+  auto_assign_reviewers: true
   poem: false
 code_generation:
   docstrings:
     language: ko-KR
+issue_enrichment:
+  labeling:
+    auto_apply_labels: true
