@@ -1,0 +1,7 @@
+# Compose 관련
+Compose:
+  ComposableNaming:
+    active: true  # 대문자 시작 명사 강제
+
+  MutableParams:
+    active: true  # 변경 가능한 파라미터 주입 방지

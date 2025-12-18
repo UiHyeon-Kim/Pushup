@@ -1,4 +1,4 @@
-package com.hanhyo.pushup.ui.theme
+package com.hanhyo.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

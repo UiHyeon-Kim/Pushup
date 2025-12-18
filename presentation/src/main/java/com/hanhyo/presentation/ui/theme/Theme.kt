@@ -1,4 +1,4 @@
-package com.hanhyo.pushup.ui.theme
+package com.hanhyo.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
