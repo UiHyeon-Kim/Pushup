@@ -3,16 +3,18 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    id("io.gitlab.arturbosch.detekt")
-    id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 detekt {
-    config = files(
-        "$rootDir/config/detekt/detekt-common.yml",
-        "$rootDir/config/detekt/detekt-compose.yml",
-    ) // 커스텀 룰셋 파일 경로
+    config.setFrom(
+        files(
+            "$rootDir/config/detekt/detekt-common.yml",
+            "$rootDir/config/detekt/detekt-compose.yml",
+        ) // 커스텀 룰셋 파일 경로
+    )
     buildUponDefaultConfig = true   // detekt 기본 룰 + 커스텀 룰
     allRules = false    // 모든 룰셋 적용 - 명시적 false 시킴
 }
@@ -41,8 +43,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true

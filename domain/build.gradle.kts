@@ -2,11 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.detekt)
 }
 
 detekt {
-    config = files("$rootDir/config/detekt/detekt-common.yml")
+    config.setFrom(files("$rootDir/config/detekt/detekt-common.yml"))
     buildUponDefaultConfig = true
 }
 
@@ -31,15 +31,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+
+    // 필요시 Kotlin Coroutines 추가
+    // implementation(libs.kotlinx.coroutines.core)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)

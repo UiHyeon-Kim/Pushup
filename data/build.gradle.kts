@@ -2,12 +2,12 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 
-    id("io.gitlab.arturbosch.detekt")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ksp)
 }
 
 detekt {
-    config = files("$rootDir/config/detekt/detekt-common.yml")
+    config.setFrom(files("$rootDir/config/detekt/detekt-common.yml"))
     buildUponDefaultConfig = true
 }
 
@@ -32,8 +32,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
 }
 
