@@ -2,14 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 
-    alias(libs.plugins.detekt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-}
-
-detekt {
-    config.setFrom(files("$rootDir/config/detekt/detekt-common.yml"))
-    buildUponDefaultConfig = true
 }
 
 android {

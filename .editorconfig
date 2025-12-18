@@ -1,0 +1,16 @@
+# 이 최상위 파일(기준)임
+root = true
+
+# 전역 규칙
+[*]
+charset = utf-8                 # 문자열 인코딩 통일
+end_of_line = lf                # 줄바꿈 Window <-> Mac, Linux 충돌 방지
+insert_final_newline = true     # 파일 끝에 빈 줄 하나
+indent_style = space            # indent 스페이스 기준
+indent_size = 4                 # 4칸 들여쓰기
+max_line_length = 120           # 한 줄 길이 120자
+
+# 코틀린 파일 규칙
+[*.kt]
+ij_kotlin_allow_trailing_comma = true               # 선언부에 꼬리 콤파 허용
+ij_kotlin_allow_trailing_comma_on_call_site = true  # 함수 호출부에 꼬리 콤마 허용

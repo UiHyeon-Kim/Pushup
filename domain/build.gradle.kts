@@ -1,11 +1,5 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.detekt)
-}
-
-detekt {
-    config.setFrom(files("$rootDir/config/detekt/detekt-common.yml"))
-    buildUponDefaultConfig = true
 }
 
 java {

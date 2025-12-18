@@ -37,9 +37,10 @@ style:
   ExpressionBodySyntax:
     active: true # 한 줄짜리 함수는 단일 표현식 사용
 
+  # ktlint 에게 맡김
   MaxLineLength:
-    active: true
-    maxLineLength: 120  # 한 줄 최대 길이 120자
+    active: false
+#    maxLineLength: 120  # 한 줄 최대 길이 120자
 
 # 명명 규칙
 naming:
