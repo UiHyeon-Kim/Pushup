@@ -65,8 +65,8 @@ jobs:
         run: ./gradlew lintDebug
 
       # 테스트 코드 작성 후 활성화
-      #      - name: Unit Test
-      #        run: ./gradlew testDebugUnitTest
+#      - name: Unit Test
+#        run: ./gradlew testDebugUnitTest
 
       # 컴파일, 리소스 처리, 의존성 검증
       # release 브랜치 도입 후 활성화 고려
