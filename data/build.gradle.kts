@@ -57,5 +57,5 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    ksp(libs.dagger.hilt.compiler)
+    ksp(libs.hilt.compiler)
 }
