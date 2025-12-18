@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
 
     alias(libs.plugins.detekt)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
