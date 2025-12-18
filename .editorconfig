@@ -12,6 +12,7 @@ max_line_length = 120           # 한 줄 길이 120자
 
 # 코틀린 파일 규칙
 [*.{kt,kts}]
+max_line_length = 120
 ij_kotlin_allow_trailing_comma = true               # 선언부에 꼬리 콤파 허용
 ij_kotlin_allow_trailing_comma_on_call_site = true  # 함수 호출부에 꼬리 콤마 허용
-trim_trailing_whitespace = false                    # 라인 끝 공백 허용 (현재 상태 기준)
+ktlint_standard_no-trailing-spaces = disabled       # 문장 뒤 공백 허용
