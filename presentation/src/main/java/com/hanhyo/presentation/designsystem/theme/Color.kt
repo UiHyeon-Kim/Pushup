@@ -1,4 +1,4 @@
-package com.hanhyo.presentation.ui.theme
+package com.hanhyo.presentation.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
