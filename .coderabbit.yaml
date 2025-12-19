@@ -3,9 +3,15 @@ language: ko-KR
 reviews:
   profile: assertive
   request_changes_workflow: true
+  high_level_summary_placeholder: '@code'
+  auto_title_placeholder: '@code'
   auto_apply_labels: true
   auto_assign_reviewers: true
   poem: false
+  auto_review:
+    base_branches:
+      - main
+      - develop
 code_generation:
   docstrings:
     language: ko-KR
