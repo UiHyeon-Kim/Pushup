@@ -15,8 +15,7 @@ kotlin {
 
 dependencies {
 
-    // 필요시 Kotlin Coroutines 추가
-    // implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
