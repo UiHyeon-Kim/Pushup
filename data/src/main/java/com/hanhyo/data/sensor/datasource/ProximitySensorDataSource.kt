@@ -1,0 +1,87 @@
+package com.hanhyo.data.sensor.datasource
+
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import com.hanhyo.data.R
+import com.hanhyo.domain.model.PushupState
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import javax.inject.Inject
+
+class ProximitySensorDataSource @Inject constructor(
+    @ApplicationContext private val context: Context,
+) : SensorDataSource {
+    private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    private val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+    private val maxRange = proximitySensor?.maximumRange ?: MAX_RANGE   // 센서 최대 범위
+    private val proximityThreshold = maxRange * PROXIMITY_THRESHOLD     // 근접 판단 거리
+
+    private var sensorEventListener: SensorEventListener? = null
+
+
+    override suspend fun startSensorMonitoring() {
+        if (sensorEventListener != null) return
+        if (proximitySensor == null) throw IllegalStateException(context.getString(R.string.error_proximity_sensor_not_found))
+    }
+
+    override suspend fun stopSensorMonitoring() {
+        sensorEventListener?.let {
+            sensorManager.unregisterListener(it)
+            sensorEventListener = null
+        }
+    }
+
+    override fun observePushupState(): Flow<PushupState> = callbackFlow {
+
+        if (sensorEventListener == null) {
+            trySend(PushupState.Unknown)
+            close(IllegalStateException(context.getString(R.string.error_proximity_sensor_not_found)))
+            return@callbackFlow
+        }
+
+        sensorEventListener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent?) {
+                event?.let {
+                    if (it.sensor.type == Sensor.TYPE_PROXIMITY) {
+                        val distance = it.values[0]
+
+                        val state = when {
+                            distance < proximityThreshold -> PushupState.Near
+                            distance >= proximityThreshold -> PushupState.Far
+                            else -> PushupState.Unknown
+                        }
+                        trySend(state)
+                    }
+                }
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+        }
+
+        sensorManager.registerListener(
+            sensorEventListener,
+            proximitySensor,
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+
+        // Flow가 취소되면 센서 리스너 해제
+        awaitClose {
+            sensorManager.unregisterListener(sensorEventListener)
+            sensorEventListener = null
+        }
+    }.distinctUntilChanged() // 동일한 상태는 필터링
+
+    override fun isSensorAvailable(): Boolean = proximitySensor != null
+
+
+    companion object {
+        const val MAX_RANGE = 5f                // 기종에 따라 근접 센서 인식 범위는 5cm +- 3cm 정도
+        const val PROXIMITY_THRESHOLD = 0.8f    // 80%
+    }
+}
