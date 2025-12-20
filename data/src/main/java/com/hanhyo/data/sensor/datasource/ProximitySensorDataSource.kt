@@ -39,7 +39,7 @@ class ProximitySensorDataSource @Inject constructor(
 
     override fun observePushupState(): Flow<PushupState> = callbackFlow {
 
-        if (sensorEventListener == null) {
+        if (proximitySensor == null) {
             trySend(PushupState.Unknown)
             close(IllegalStateException(context.getString(R.string.error_proximity_sensor_not_found)))
             return@callbackFlow
