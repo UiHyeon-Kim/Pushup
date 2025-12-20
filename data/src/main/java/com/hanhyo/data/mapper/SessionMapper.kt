@@ -7,7 +7,8 @@ import com.hanhyo.domain.model.PushupType
 fun PushupSessionEntity.toDomain(): PushupSession =
     PushupSession(
         id = id,
-        type = PushupType.valueOf(type),
+        type = runCatching { PushupType.valueOf(type) }
+            .getOrDefault(PushupType.UNKNOWN),
         startTime = startTime,
         endTime = endTime,
         totalCount = totalCount,
@@ -18,10 +19,10 @@ fun PushupSessionEntity.toDomain(): PushupSession =
 
 fun PushupSession.toEntity(): PushupSessionEntity =
     PushupSessionEntity(
-        id = id,
+        id = id ?: 0, // Room의 autoGenerate 가 0 을 생성되지 않은 ID로 판단해 새 ID 생성
         type = type.name,
         startTime = startTime,
-        endTime = endTime ?: 0L,
+        endTime = endTime,
         totalCount = totalCount,
         isCompleted = isCompleted,
         maxConsecutive = maxConsecutive,
