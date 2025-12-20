@@ -6,4 +6,5 @@ enum class PushupType {
     SLOW,
     CHALLENGE,
     RECORD,
+    UNKNOWN,
 }
