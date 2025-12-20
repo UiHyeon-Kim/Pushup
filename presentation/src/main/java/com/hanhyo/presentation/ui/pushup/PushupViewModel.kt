@@ -1,7 +1,6 @@
 package com.hanhyo.presentation.ui.pushup
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.usecase.MeasurePushupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

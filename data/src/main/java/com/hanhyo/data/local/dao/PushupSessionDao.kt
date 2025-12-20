@@ -13,5 +13,5 @@ interface PushupSessionDao {
     suspend fun insert(session: PushupSessionEntity): Long
 
     @Query("SELECT * FROM pushup_session ORDER BY startTime DESC")
-    fun observeSession(): Flow<List<PushupSessionEntity>>
+    fun observeSessions(): Flow<List<PushupSessionEntity>>
 }
