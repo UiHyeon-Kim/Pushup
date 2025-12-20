@@ -17,8 +17,7 @@ class Converters {
     @TypeConverter
     fun toPushupType(name: String): PushupType = try {
         PushupType.valueOf(name)
-    } catch (e: IllegalArgumentException) {
-        // Log.w("Converters", "Unknown PushupType: $name, defaulting to UNKNOWN", e)
+    } catch (_: IllegalArgumentException) {
         PushupType.UNKNOWN
     }
 
