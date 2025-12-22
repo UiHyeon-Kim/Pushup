@@ -13,10 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class ProximitySensorDataSource @Inject constructor(
@@ -76,12 +74,6 @@ class ProximitySensorDataSource @Inject constructor(
             sensorEventListener = null
         }
     }.distinctUntilChanged() // 동일한 상태는 필터링
-        // Hot Flow로 변경
-        .shareIn(
-            scope = serviceScope, // 이 Flow를 유지하고 있을 범위
-            started = SharingStarted.WhileSubscribed(5000), // 구독자가 사라지고 5초 후 센서 종료
-            replay = 1, // 새 구독자에게 가장 최근 센서 상태 전달
-        )
 
     override fun isSensorAvailable(): Boolean = proximitySensor != null
 
