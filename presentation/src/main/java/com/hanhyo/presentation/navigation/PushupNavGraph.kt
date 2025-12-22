@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hanhyo.presentation.ui.home.HomeScreen
 import com.hanhyo.presentation.ui.pushup.PushupScreen
+import com.hanhyo.presentation.ui.record.PushupRecordScreen
 
 @Composable
 fun PushupNavGraph(
@@ -22,5 +23,6 @@ fun PushupNavGraph(
     ) {
         composable(NavigationRoute.Home.route) { HomeScreen(navController) }
         composable(NavigationRoute.Pushup.route) { PushupScreen() }
+        composable(NavigationRoute.Record.route) { PushupRecordScreen() }
     }
 }
