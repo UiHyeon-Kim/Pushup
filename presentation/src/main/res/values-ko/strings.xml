@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Pushup</string>
+    <string name="sensor_state_title">센서 상태</string>
+    <string name="sensor_state_on">켜짐</string>
+    <string name="sensor_state_unknown">알 수 없음</string>
+    <string name="pushup_count_label">COUNT</string>
+    <string name="control_button_start">시작</string>
+    <string name="control_button_stop">정지</string>
+    <string name="control_button_reset">초기화</string>
+    <string name="error_sensor_unavailable">센서를 사용할 수 없습니다</string>
+    <string name="error_session_start_failed">세션 시작 실패: %1$s</string>
+    <string name="error_sensor_monitoring">센서 모니터링 오류: %1$s</string>
+    <string name="error_count_monitoring">카운트 모니터링 오류: %1$s</string>
+    <string name="error_session_stop_failed">세션 종료 실패: %1$s</string>
+</resources>

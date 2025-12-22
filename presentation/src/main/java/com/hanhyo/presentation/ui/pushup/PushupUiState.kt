@@ -1,7 +1,13 @@
 package com.hanhyo.presentation.ui.pushup
 
+import com.hanhyo.domain.model.PushupState
+
 data class PushupUiState(
     val currentCount: Int = 0,
-    val totalPushup: Int = 0,
-    val isMeasuring: Boolean = false,
+    val sessionStartTime: Long? = null,
+    val sessionDuration: Int = 0,
+    val isSessionActive: Boolean = false,
+    val pushupState: PushupState = PushupState.Unknown,
+    val isSensorAvailable: Boolean = true,
+    val errorMessage: String? = null
 )

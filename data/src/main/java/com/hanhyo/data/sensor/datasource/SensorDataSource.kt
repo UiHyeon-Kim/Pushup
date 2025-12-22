@@ -1,9 +1,12 @@
-package com.hanhyo.domain.repository
+package com.hanhyo.data.sensor.datasource
 
 import com.hanhyo.domain.model.PushupState
 import kotlinx.coroutines.flow.Flow
 
-interface PushupSensorRepository {
+/**
+ * 센서 데이터 소스 인터페이스
+ */
+interface SensorDataSource {
     fun observePushupState(): Flow<PushupState>
     fun isSensorAvailable(): Boolean
 }
