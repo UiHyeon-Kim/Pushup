@@ -117,10 +117,8 @@ class PushupViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(errorMessage = application.getString(R.string.error_sensor_monitoring, e.message))
                 }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(errorMessage = application.getString(R.string.error_count_monitoring, e.message))
-                }
+            } catch (e: CancellationException) {
+                throw e
             }
         }
     }

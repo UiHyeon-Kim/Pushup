@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hanhyo.presentation.R
 
-// FIXME: UI 변경 예정
+// TODO: UI 변경 예정
 @Suppress("LongMethod")
 @Composable
 fun ControlButtons(
@@ -72,7 +72,6 @@ fun ControlButtons(
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = R.string.control_button_stop),
                     fontSize = 20.sp,
@@ -92,7 +91,6 @@ fun ControlButtons(
                 width = 2.dp
             )
         ) {
-            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(id = R.string.control_button_reset),
                 fontSize = 18.sp,
