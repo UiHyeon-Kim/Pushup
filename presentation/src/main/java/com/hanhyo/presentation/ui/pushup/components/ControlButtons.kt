@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hanhyo.presentation.R
 
+// FIXME: UI 변경 예정
+@Suppress("TooGenericExceptionCaught")
 @Composable
 fun ControlButtons(
     isSessionActive: Boolean,
