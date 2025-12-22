@@ -11,6 +11,8 @@ complexity:
     active: true
     functionThreshold: 6  # 일반 함수는 최대 6개 파라미터
     constructorThreshold: 8  # 생성자는 최대 8개 파라미터
+    ignoreAnnotated:
+      - 'Composable'
 
   TooManyFunctions:
     active: true
