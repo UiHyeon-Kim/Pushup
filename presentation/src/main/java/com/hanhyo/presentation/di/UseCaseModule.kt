@@ -1,11 +1,14 @@
 package com.hanhyo.presentation.di
 
+import com.hanhyo.domain.repository.PreferenceRepository
 import com.hanhyo.domain.repository.PushupRecordRepository
 import com.hanhyo.domain.repository.PushupSensorRepository
 import com.hanhyo.domain.usecase.CheckSensorAvailableUseCase
 import com.hanhyo.domain.usecase.CompleteSessionUseCase
+import com.hanhyo.domain.usecase.ObservePreferenceUseCase
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
 import com.hanhyo.domain.usecase.StartSessionUseCase
+import com.hanhyo.domain.usecase.UpdatePreferenceUseCase
 import com.hanhyo.domain.usecase.UpdateSessionUseCase
 import dagger.Module
 import dagger.Provides
@@ -35,7 +38,14 @@ object UseCaseModule {
     @Provides
     fun provideCheckSensorAvailableUseCase(
         pushupSensorRepository: PushupSensorRepository
-    ): CheckSensorAvailableUseCase {
-        return CheckSensorAvailableUseCase(pushupSensorRepository)
-    }
+    ): CheckSensorAvailableUseCase =
+        CheckSensorAvailableUseCase(pushupSensorRepository)
+
+    @Provides
+    fun provideObservePreferenceUseCase(repository: PreferenceRepository): ObservePreferenceUseCase =
+        ObservePreferenceUseCase(repository)
+
+    @Provides
+    fun provideUpdatePreferenceUseCase(repository: PreferenceRepository): UpdatePreferenceUseCase =
+        UpdatePreferenceUseCase(repository)
 }
