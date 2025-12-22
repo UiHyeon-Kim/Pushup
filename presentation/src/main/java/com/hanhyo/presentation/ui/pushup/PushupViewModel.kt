@@ -1,10 +1,12 @@
 package com.hanhyo.presentation.ui.pushup
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
 import com.hanhyo.domain.usecase.StopPushupSessionUseCase
+import com.hanhyo.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,10 +16,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
 class PushupViewModel @Inject constructor(
+    private val application: Application,
     private val observePushupStateUseCase: ObservePushupStateUseCase,
     private val stopPushUpSessionUseCase: StopPushupSessionUseCase,
 ) : ViewModel() {
@@ -39,12 +43,19 @@ class PushupViewModel @Inject constructor(
 
     private fun checkSensorAvailability() {
         viewModelScope.launch {
-            try {
-                observePushupStateUseCase().first()
-
-                _uiState.update { it.copy(isSensorAvailable = true) }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isSensorAvailable = false, errorMessage = "센서를 사용할 수 없습니다") }
+            val isAvailable = try {
+                withTimeout(1000L) {
+                    observePushupStateUseCase().first()
+                }
+                true
+            } catch (_: Exception) {
+                false
+            }
+            _uiState.update {
+                it.copy(
+                    isSensorAvailable = isAvailable,
+                    errorMessage = if (!isAvailable) application.getString(R.string.error_sensor_unavailable) else null
+                )
             }
         }
     }
@@ -52,14 +63,12 @@ class PushupViewModel @Inject constructor(
     fun startSession() {
         if (_uiState.value.isSessionActive) return
         if (!_uiState.value.isSensorAvailable) {
-            _uiState.update { it.copy(errorMessage = "센서를 사용할 수 없습니다") }
+            _uiState.update { it.copy(errorMessage = application.getString(R.string.error_sensor_unavailable)) }
             return
         }
 
         viewModelScope.launch {
             try {
-                startPushUpSessionUseCase()
-
                 _uiState.update {
                     it.copy(
                         isSessionActive = true,
@@ -77,7 +86,7 @@ class PushupViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isSessionActive = false,
-                        errorMessage = "세션 시작 실패: ${e.message}"
+                        errorMessage = application.getString(R.string.error_session_start_failed, e.message)
                     )
                 }
             }
@@ -107,11 +116,11 @@ class PushupViewModel @Inject constructor(
                 }
             } catch (e: IllegalStateException) {
                 _uiState.update {
-                    it.copy(errorMessage = "센서 모니터링 오류: ${e.message}")
+                    it.copy(errorMessage = application.getString(R.string.error_sensor_monitoring, e.message))
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(errorMessage = "카운트 모니터링 오류: ${e.message}")
+                    it.copy(errorMessage = application.getString(R.string.error_count_monitoring, e.message))
                 }
             }
         }
@@ -122,6 +131,7 @@ class PushupViewModel @Inject constructor(
         timerJob = viewModelScope.launch {
             while (_uiState.value.isSessionActive) {
                 delay(1000L)
+                if (!_uiState.value.isSessionActive) break
                 _uiState.update { currentState ->
                     currentState.sessionStartTime?.let { startTime ->
                         val duration = ((System.currentTimeMillis() - startTime) / 1000).toInt()
@@ -150,7 +160,7 @@ class PushupViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(errorMessage = "세션 종료 실패: ${e.message}")
+                    it.copy(errorMessage = application.getString(R.string.error_session_stop_failed, e.message))
                 }
             }
         }
@@ -170,12 +180,14 @@ class PushupViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+
+        // viewModelScope는 onCleared()가 완료될 때까지 이 코루틴 실행 보장
         viewModelScope.launch {
             try {
                 stopPushUpSessionUseCase()
-                pushupStateMonitoringJob?.cancel()
-                timerJob?.cancel()
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+                // 뷰모델 종료 실패 로그 필요 시
+            }
         }
     }
 

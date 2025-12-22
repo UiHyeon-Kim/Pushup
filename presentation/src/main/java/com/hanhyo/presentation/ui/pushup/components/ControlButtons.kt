@@ -15,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hanhyo.presentation.R
 
 @Composable
 fun ControlButtons(
@@ -50,7 +52,7 @@ fun ControlButtons(
             ) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "시작",
+                    text = stringResource(id = R.string.control_button_start),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -71,7 +73,7 @@ fun ControlButtons(
             ) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "정지",
+                    text = stringResource(id = R.string.control_button_stop),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -91,7 +93,7 @@ fun ControlButtons(
         ) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "초기화",
+                text = stringResource(id = R.string.control_button_reset),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )

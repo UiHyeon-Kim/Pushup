@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Pushup</string>
+    <string name="sensor_state_title">Sensor State</string>
+    <string name="sensor_state_on">On</string>
+    <string name="sensor_state_unknown">Unknown</string>
+    <string name="pushup_count_label">COUNT</string>
+    <string name="control_button_start">Start</string>
+    <string name="control_button_stop">Stop</string>
+    <string name="control_button_reset">Reset</string>
+    <string name="error_sensor_unavailable">Sensor is not available</string>
+    <string name="error_session_start_failed">Failed to start session: %1$s</string>
+    <string name="error_sensor_monitoring">Sensor monitoring error: %1$s</string>
+    <string name="error_count_monitoring">Count monitoring error: %1$s</string>
+    <string name="error_session_stop_failed">Failed to stop session: %1$s</string>
 </resources>

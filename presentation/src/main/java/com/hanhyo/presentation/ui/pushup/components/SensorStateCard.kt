@@ -11,9 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.hanhyo.domain.model.PushupState
+import com.hanhyo.presentation.R
 
 @Composable
 fun SensorStateCard(
@@ -35,12 +37,16 @@ fun SensorStateCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "센서 상태",
+                text = stringResource(id = R.string.sensor_state_title),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
             Text(
-                text = if (pushupState != PushupState.Unknown) "켜짐" else "알 수 없음",
+                text = when (pushupState) {
+                    is PushupState.Far -> stringResource(id = R.string.sensor_state_on)
+                    is PushupState.Near -> stringResource(id = R.string.sensor_state_on)
+                    is PushupState.Unknown -> stringResource(id = R.string.sensor_state_unknown)
+                },
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
             )
