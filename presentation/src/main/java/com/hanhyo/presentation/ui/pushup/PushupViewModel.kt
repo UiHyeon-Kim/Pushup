@@ -7,6 +7,7 @@ import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
 import com.hanhyo.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -154,10 +155,15 @@ class PushupViewModel @Inject constructor(
                         pushupState = PushupState.Unknown,
                     )
                 }
-            } catch (e: Exception) {
+            } catch (e: IllegalStateException) {
                 _uiState.update {
-                    it.copy(errorMessage = application.getString(R.string.error_session_stop_failed, e.message))
+                    it.copy(
+                        isSessionActive = false,
+                        errorMessage = application.getString(R.string.error_session_stop_failed, e.message)
+                    )
                 }
+            } catch (e: CancellationException) {
+                throw e
             }
         }
     }
