@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
-import com.hanhyo.domain.usecase.StopPushupSessionUseCase
 import com.hanhyo.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -23,7 +22,6 @@ import javax.inject.Inject
 class PushupViewModel @Inject constructor(
     private val application: Application,
     private val observePushupStateUseCase: ObservePushupStateUseCase,
-    private val stopPushUpSessionUseCase: StopPushupSessionUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PushupUiState())
@@ -147,8 +145,6 @@ class PushupViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                stopPushUpSessionUseCase()
-
                 pushupStateMonitoringJob?.cancel()
                 timerJob?.cancel()
 
@@ -178,18 +174,6 @@ class PushupViewModel @Inject constructor(
         lastCountTime = 0L
     }
 
-    override fun onCleared() {
-        super.onCleared()
-
-        // viewModelScope는 onCleared()가 완료될 때까지 이 코루틴 실행 보장
-        viewModelScope.launch {
-            try {
-                stopPushUpSessionUseCase()
-            } catch (_: Exception) {
-                // 뷰모델 종료 실패 로그 필요 시
-            }
-        }
-    }
 
     companion object {
         const val DEBOUNCE = 1000L

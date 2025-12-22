@@ -10,12 +10,7 @@ class PushupSensorRepositoryImpl @Inject constructor(
     private val proximitySensorDataSource: ProximitySensorDataSource
 ) : PushupSensorRepository {
 
-    override suspend fun stopSensorMonitoring() {
-        proximitySensorDataSource.stopSensorMonitoring()
-    }
-
     override fun observePushupState(): Flow<PushupState> = proximitySensorDataSource.observePushupState()
 
     override fun isSensorAvailable(): Boolean = proximitySensorDataSource.isSensorAvailable()
-
 }

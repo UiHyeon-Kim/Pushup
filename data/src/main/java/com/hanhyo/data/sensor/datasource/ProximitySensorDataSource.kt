@@ -24,15 +24,6 @@ class ProximitySensorDataSource @Inject constructor(
         it.maximumRange * PROXIMITY_THRESHOLD
     } ?: (MAX_RANGE * PROXIMITY_THRESHOLD)
 
-    private var sensorEventListener: SensorEventListener? = null
-
-
-    fun stopSensorMonitoring() {
-        sensorEventListener?.let {
-            sensorManager.unregisterListener(it)
-            sensorEventListener = null
-        }
-    }
 
     override fun observePushupState(): Flow<PushupState> = callbackFlow {
 
@@ -42,7 +33,7 @@ class ProximitySensorDataSource @Inject constructor(
             return@callbackFlow
         }
 
-        sensorEventListener = object : SensorEventListener {
+        val listener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent?) {
                 event?.let {
                     if (it.sensor.type == Sensor.TYPE_PROXIMITY) {
@@ -58,15 +49,14 @@ class ProximitySensorDataSource @Inject constructor(
         }
 
         sensorManager.registerListener(
-            sensorEventListener,
+            listener,
             proximitySensor,
             SensorManager.SENSOR_DELAY_NORMAL
         )
 
         // Flow가 취소되면 센서 리스너 해제
         awaitClose {
-            sensorManager.unregisterListener(sensorEventListener)
-            sensorEventListener = null
+            sensorManager.unregisterListener(listener)
         }
     }.distinctUntilChanged() // 동일한 상태는 필터링
 
