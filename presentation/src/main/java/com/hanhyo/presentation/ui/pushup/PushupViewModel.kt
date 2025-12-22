@@ -7,7 +7,6 @@ import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
 import com.hanhyo.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -117,8 +116,6 @@ class PushupViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(errorMessage = application.getString(R.string.error_sensor_monitoring, e.message))
                 }
-            } catch (e: CancellationException) {
-                throw e
             }
         }
     }
@@ -160,8 +157,6 @@ class PushupViewModel @Inject constructor(
                         errorMessage = application.getString(R.string.error_session_stop_failed, e.message)
                     )
                 }
-            } catch (e: CancellationException) {
-                throw e
             }
         }
     }
