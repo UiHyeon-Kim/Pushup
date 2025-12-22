@@ -185,6 +185,6 @@ class PushupViewModel @Inject constructor(
         const val DEBOUNCE = 1000L
         const val SENSOR_TIMEOUT = 1000L
         const val TIMER_INTERVAL = 1000L
-        const val MILLIS_PER_SECOND = 1000L
+        const val MILLIS_PER_SECOND = 1000
     }
 }
