@@ -8,9 +8,6 @@ import android.hardware.SensorManager
 import com.hanhyo.data.R
 import com.hanhyo.domain.model.PushupState
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -23,9 +20,7 @@ class ProximitySensorDataSource @Inject constructor(
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
-    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-
-    val proximityThreshold = proximitySensor?.let {
+    private val proximityThreshold = proximitySensor?.let {
         it.maximumRange * PROXIMITY_THRESHOLD
     } ?: (MAX_RANGE * PROXIMITY_THRESHOLD)
 

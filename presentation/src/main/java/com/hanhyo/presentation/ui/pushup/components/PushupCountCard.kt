@@ -28,7 +28,7 @@ fun PushupCountCard(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 200.dp, max = 400.dp)
-            .aspectRatio(1.5f), // TODO 실행 후 확인하기
+            .aspectRatio(1.5f),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
@@ -50,9 +50,9 @@ fun PushupCountCard(
                 )
                 Text(
                     text = stringResource(id = R.string.pushup_count_label),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
-                    letterSpacing = 4.sp,
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        letterSpacing = 4.sp
+                    ),
                     color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                 )
             }
