@@ -4,7 +4,6 @@ import com.hanhyo.domain.model.PushupState
 import kotlinx.coroutines.flow.Flow
 
 interface PushupSensorRepository {
-    suspend fun startSensorMonitoring()
     suspend fun stopSensorMonitoring()
     fun getProximityState(): Flow<PushupState>
     fun isSensorAvailable(): Boolean

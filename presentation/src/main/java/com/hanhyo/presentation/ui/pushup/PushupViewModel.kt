@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
-import com.hanhyo.domain.usecase.StartPushUpSessionUseCase
 import com.hanhyo.domain.usecase.StopPushUpSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PushupViewModel @Inject constructor(
     private val observePushupStateUseCase: ObservePushupStateUseCase,
-    private val startPushUpSessionUseCase: StartPushUpSessionUseCase,
     private val stopPushUpSessionUseCase: StopPushUpSessionUseCase,
 ) : ViewModel() {
 

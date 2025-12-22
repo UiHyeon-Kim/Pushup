@@ -25,12 +25,7 @@ class ProximitySensorDataSource @Inject constructor(
     private var sensorEventListener: SensorEventListener? = null
 
 
-    override suspend fun startSensorMonitoring() {
-        if (sensorEventListener != null) return
-        if (proximitySensor == null) throw IllegalStateException(context.getString(R.string.error_proximity_sensor_not_found))
-    }
-
-    override suspend fun stopSensorMonitoring() {
+    fun stopSensorMonitoring() {
         sensorEventListener?.let {
             sensorManager.unregisterListener(it)
             sensorEventListener = null

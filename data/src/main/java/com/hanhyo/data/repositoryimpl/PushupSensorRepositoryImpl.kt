@@ -9,9 +9,6 @@ import javax.inject.Inject
 class PushupSensorRepositoryImpl @Inject constructor(
     private val proximitySensorDataSource: ProximitySensorDataSource
 ) : PushupSensorRepository {
-    override suspend fun startSensorMonitoring() {
-        proximitySensorDataSource.startSensorMonitoring()
-    }
 
     override suspend fun stopSensorMonitoring() {
         proximitySensorDataSource.stopSensorMonitoring()
