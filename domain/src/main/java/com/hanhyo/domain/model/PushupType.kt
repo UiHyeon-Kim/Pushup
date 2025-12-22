@@ -8,3 +8,5 @@ enum class PushupType {
     RECORD,
     UNKNOWN,
 }
+
+// 추후 추가 고려 WIDE, NARROW, DIAMOND
