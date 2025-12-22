@@ -43,7 +43,7 @@ class PushupViewModel @Inject constructor(
     private fun checkSensorAvailability() {
         viewModelScope.launch {
             val isAvailable = try {
-                withTimeout(1000L) {
+                withTimeout(SENSOR_TIMEOUT) {
                     observePushupStateUseCase().first()
                 }
                 true
@@ -129,11 +129,11 @@ class PushupViewModel @Inject constructor(
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
             while (_uiState.value.isSessionActive) {
-                delay(1000L)
+                delay(TIMER_INTERVAL)
                 if (!_uiState.value.isSessionActive) break
                 _uiState.update { currentState ->
                     currentState.sessionStartTime?.let { startTime ->
-                        val duration = ((System.currentTimeMillis() - startTime) / 1000).toInt()
+                        val duration = ((System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND).toInt()
                         currentState.copy(sessionDuration = duration)
                     } ?: currentState
                 }
@@ -183,5 +183,8 @@ class PushupViewModel @Inject constructor(
 
     companion object {
         const val DEBOUNCE = 1000L
+        const val SENSOR_TIMEOUT = 1000L
+        const val TIMER_INTERVAL = 1000L
+        const val MILLIS_PER_SECOND = 1000L
     }
 }
