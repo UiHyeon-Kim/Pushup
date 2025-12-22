@@ -1,7 +1,10 @@
 package com.hanhyo.data.di
 
+import com.hanhyo.data.local.datasource.PushupLocalDataSource
+import com.hanhyo.data.repositoryimpl.PushupRecordRepositoryImpl
 import com.hanhyo.data.repositoryimpl.PushupSensorRepositoryImpl
 import com.hanhyo.data.sensor.datasource.ProximitySensorDataSource
+import com.hanhyo.domain.repository.PushupRecordRepository
 import com.hanhyo.domain.repository.PushupSensorRepository
 import dagger.Module
 import dagger.Provides
@@ -15,4 +18,8 @@ object RepositoryModule {
     @Provides
     fun providePushupSensorRepository(proximitySensorDataSource: ProximitySensorDataSource): PushupSensorRepository =
         PushupSensorRepositoryImpl(proximitySensorDataSource)
+
+    @Provides
+    fun providePushupRecordRepository(pushupLocalDataSource: PushupLocalDataSource): PushupRecordRepository =
+        PushupRecordRepositoryImpl(pushupLocalDataSource)
 }
