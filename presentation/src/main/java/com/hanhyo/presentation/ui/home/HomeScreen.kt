@@ -27,6 +27,14 @@ fun HomeScreen(
         ) {
             Text("go record")
         }
+
+        Button(
+            onClick = {
+                navController.navigate(Route.SETTING)
+            }
+        ) {
+            Text("go setting")
+        }
     }
 }
 
