@@ -81,7 +81,7 @@ class PushupViewModel @Inject constructor(
                 startPushupMonitoring()
                 startTimer()
 
-            } catch (e: Exception) {
+            } catch (e: IllegalStateException) {
                 _uiState.update {
                     it.copy(
                         isSessionActive = false,
