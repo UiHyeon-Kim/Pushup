@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
-import com.hanhyo.domain.usecase.StopPushUpSessionUseCase
+import com.hanhyo.domain.usecase.StopPushupSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PushupViewModel @Inject constructor(
     private val observePushupStateUseCase: ObservePushupStateUseCase,
-    private val stopPushUpSessionUseCase: StopPushUpSessionUseCase,
+    private val stopPushUpSessionUseCase: StopPushupSessionUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PushupUiState())

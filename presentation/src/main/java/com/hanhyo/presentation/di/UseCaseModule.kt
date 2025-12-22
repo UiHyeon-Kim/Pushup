@@ -2,7 +2,7 @@ package com.hanhyo.presentation.di
 
 import com.hanhyo.domain.repository.PushupSensorRepository
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
-import com.hanhyo.domain.usecase.StopPushUpSessionUseCase
+import com.hanhyo.domain.usecase.StopPushupSessionUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,9 +13,8 @@ import dagger.hilt.components.SingletonComponent
 object UseCaseModule {
 
     @Provides
-    @Provides
-    fun provideStopPushUpSessionUseCase(repository: PushupSensorRepository): StopPushUpSessionUseCase =
-        StopPushUpSessionUseCase(repository)
+    fun provideStopPushUpSessionUseCase(repository: PushupSensorRepository): StopPushupSessionUseCase =
+        StopPushupSessionUseCase(repository)
 
     @Provides
     fun provideObservePushupStateUseCase(repository: PushupSensorRepository): ObservePushupStateUseCase =

@@ -8,10 +8,15 @@ import android.hardware.SensorManager
 import com.hanhyo.data.R
 import com.hanhyo.domain.model.PushupState
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class ProximitySensorDataSource @Inject constructor(
@@ -19,8 +24,12 @@ class ProximitySensorDataSource @Inject constructor(
 ) : SensorDataSource {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-    private val maxRange = proximitySensor?.maximumRange ?: MAX_RANGE   // 센서 최대 범위
-    private val proximityThreshold = maxRange * PROXIMITY_THRESHOLD     // 근접 판단 거리
+
+    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    val proximityThreshold = proximitySensor?.let {
+        it.maximumRange * PROXIMITY_THRESHOLD
+    } ?: (MAX_RANGE * PROXIMITY_THRESHOLD)
 
     private var sensorEventListener: SensorEventListener? = null
 
@@ -46,11 +55,7 @@ class ProximitySensorDataSource @Inject constructor(
                     if (it.sensor.type == Sensor.TYPE_PROXIMITY) {
                         val distance = it.values[0]
 
-                        val state = when {
-                            distance < proximityThreshold -> PushupState.Near
-                            distance >= proximityThreshold -> PushupState.Far
-                            else -> PushupState.Unknown
-                        }
+                        val state = if (distance < proximityThreshold) PushupState.Near else PushupState.Far
                         trySend(state)
                     }
                 }
@@ -71,6 +76,12 @@ class ProximitySensorDataSource @Inject constructor(
             sensorEventListener = null
         }
     }.distinctUntilChanged() // 동일한 상태는 필터링
+        // Hot Flow로 변경
+        .shareIn(
+            scope = serviceScope, // 이 Flow를 유지하고 있을 범위
+            started = SharingStarted.WhileSubscribed(5000), // 구독자가 사라지고 5초 후 센서 종료
+            replay = 1, // 새 구독자에게 가장 최근 센서 상태 전달
+        )
 
     override fun isSensorAvailable(): Boolean = proximitySensor != null
 

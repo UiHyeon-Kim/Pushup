@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PushupSensorRepository {
     suspend fun stopSensorMonitoring()
-    fun getProximityState(): Flow<PushupState>
+    fun observePushupState(): Flow<PushupState>
     fun isSensorAvailable(): Boolean
 }

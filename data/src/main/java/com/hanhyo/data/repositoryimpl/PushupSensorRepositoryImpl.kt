@@ -14,7 +14,7 @@ class PushupSensorRepositoryImpl @Inject constructor(
         proximitySensorDataSource.stopSensorMonitoring()
     }
 
-    override fun getProximityState(): Flow<PushupState> = proximitySensorDataSource.observePushupState()
+    override fun observePushupState(): Flow<PushupState> = proximitySensorDataSource.observePushupState()
 
     override fun isSensorAvailable(): Boolean = proximitySensorDataSource.isSensorAvailable()
 
