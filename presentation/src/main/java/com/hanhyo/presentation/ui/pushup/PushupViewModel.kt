@@ -4,7 +4,12 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
+import com.hanhyo.domain.model.PushupType
+import com.hanhyo.domain.usecase.CheckSensorAvailableUseCase
+import com.hanhyo.domain.usecase.CompleteSessionUseCase
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
+import com.hanhyo.domain.usecase.StartSessionUseCase
+import com.hanhyo.domain.usecase.UpdateSessionUseCase
 import com.hanhyo.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -12,16 +17,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
 class PushupViewModel @Inject constructor(
     private val application: Application,
     private val observePushupStateUseCase: ObservePushupStateUseCase,
+    private val startSessionUseCase: StartSessionUseCase,
+    private val updateSessionUseCase: UpdateSessionUseCase,
+    private val completeSessionUseCase: CompleteSessionUseCase,
+    private val checkSensorAvailableUseCase: CheckSensorAvailableUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PushupUiState())
@@ -30,35 +37,26 @@ class PushupViewModel @Inject constructor(
     private var pushupStateMonitoringJob: Job? = null
     private var timerJob: Job? = null
 
-    private var lastCountTime = 0L
     private val debounceTime = DEBOUNCE
+    private var lastCountTime = 0L
+    private var sessionStartTime = 0L
 
 
     init {
         checkSensorAvailability()
     }
 
-
     private fun checkSensorAvailability() {
-        viewModelScope.launch {
-            val isAvailable = try {
-                withTimeout(SENSOR_TIMEOUT) {
-                    observePushupStateUseCase().first()
-                }
-                true
-            } catch (_: Exception) {
-                false
-            }
-            _uiState.update {
-                it.copy(
-                    isSensorAvailable = isAvailable,
-                    errorMessage = if (!isAvailable) application.getString(R.string.error_sensor_unavailable) else null
-                )
-            }
+        val isAvailable = checkSensorAvailableUseCase()
+        _uiState.update {
+            it.copy(
+                isSensorAvailable = isAvailable,
+                errorMessage = if (!isAvailable) application.getString(R.string.error_sensor_unavailable) else null
+            )
         }
     }
 
-    fun startSession() {
+    fun startSession(type: PushupType = PushupType.BASIC) {
         if (_uiState.value.isSessionActive) return
         if (!_uiState.value.isSensorAvailable) {
             _uiState.update { it.copy(errorMessage = application.getString(R.string.error_sensor_unavailable)) }
@@ -67,11 +65,15 @@ class PushupViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
+                val sessionId = startSessionUseCase(type)
+                sessionStartTime = System.currentTimeMillis()
+
                 _uiState.update {
                     it.copy(
+                        sessionId = sessionId,
                         isSessionActive = true,
                         currentCount = 0,
-                        sessionStartTime = System.currentTimeMillis(),
+                        sessionStartTime = sessionStartTime,
                         sessionDuration = 0,
                         errorMessage = null
                     )
@@ -108,6 +110,8 @@ class PushupViewModel @Inject constructor(
                     ) {
                         _uiState.update { it.copy(currentCount = it.currentCount + 1) }
                         lastCountTime = now
+
+                        _uiState.value.sessionId?.let { updateSessionUseCase(it, 1) }
                     }
 
                     lastState = currentState
@@ -141,6 +145,8 @@ class PushupViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
+                _uiState.value.sessionId?.let { completeSessionUseCase(it) }
+
                 pushupStateMonitoringJob?.cancel()
                 timerJob?.cancel()
 
@@ -162,15 +168,31 @@ class PushupViewModel @Inject constructor(
     }
 
     fun resetCount() {
-        _uiState.update {
-            it.copy(
-                currentCount = 0,
-                sessionStartTime = if (it.isSessionActive) System.currentTimeMillis() else null,
-                sessionDuration = 0,
-            )
-        }
+        viewModelScope.launch {
+            try {
+                _uiState.value.sessionId?.let { completeSessionUseCase(it) }
 
-        lastCountTime = 0L
+                val newId = startSessionUseCase(PushupType.BASIC)
+                sessionStartTime = System.currentTimeMillis()
+
+                _uiState.update {
+                    it.copy(
+                        sessionId = newId,
+                        currentCount = 0,
+                        sessionDuration = 0,
+                        sessionStartTime = sessionStartTime,
+                    )
+                }
+
+                lastCountTime = 0L
+            } catch (e: IllegalStateException) {
+                _uiState.update {
+                    it.copy(errorMessage = e.message)
+                }
+            }
+
+            lastCountTime = 0L
+        }
     }
 
 
