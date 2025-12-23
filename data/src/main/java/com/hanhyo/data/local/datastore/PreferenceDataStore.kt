@@ -27,10 +27,15 @@ class PreferenceDataStore @Inject constructor(
             )
         }
 
-    suspend fun update(preference: UserPreference) {
+    suspend fun updateVibration(enabled: Boolean) {
         context.dataStore.edit { prefer ->
-            prefer[VIBRATION] = preference.vibrationEnabled
-            prefer[SOUND] = preference.soundEnabled
+            prefer[VIBRATION] = enabled
+        }
+    }
+
+    suspend fun updateSound(enabled: Boolean) {
+        context.dataStore.edit { prefer ->
+            prefer[SOUND] = enabled
         }
     }
 

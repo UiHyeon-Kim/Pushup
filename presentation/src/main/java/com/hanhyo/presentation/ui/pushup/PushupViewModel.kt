@@ -1,17 +1,28 @@
 package com.hanhyo.presentation.ui.pushup
 
 import android.app.Application
+import android.content.Context
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
 import com.hanhyo.domain.model.PushupType
+import com.hanhyo.domain.model.UserPreference
 import com.hanhyo.domain.usecase.CheckSensorAvailableUseCase
 import com.hanhyo.domain.usecase.CompleteSessionUseCase
+import com.hanhyo.domain.usecase.ObservePreferenceUseCase
 import com.hanhyo.domain.usecase.ObservePushupStateUseCase
 import com.hanhyo.domain.usecase.StartSessionUseCase
 import com.hanhyo.domain.usecase.UpdateSessionUseCase
 import com.hanhyo.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +40,7 @@ class PushupViewModel @Inject constructor(
     private val updateSessionUseCase: UpdateSessionUseCase,
     private val completeSessionUseCase: CompleteSessionUseCase,
     private val checkSensorAvailableUseCase: CheckSensorAvailableUseCase,
+    private val observePreferenceUseCase: ObservePreferenceUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PushupUiState())
@@ -41,9 +53,21 @@ class PushupViewModel @Inject constructor(
     private var lastCountTime = 0L
     private var sessionStartTime = 0L
 
+    private var currentPreference = UserPreference()
+
 
     init {
         checkSensorAvailability()
+        observePreferences()
+    }
+
+
+    private fun observePreferences() {
+        viewModelScope.launch {
+            observePreferenceUseCase().collect { preference ->
+                currentPreference = preference
+            }
+        }
     }
 
     private fun checkSensorAvailability() {
@@ -132,6 +156,32 @@ class PushupViewModel @Inject constructor(
         }
     }
 
+    private fun provideFeedback() {
+        if (currentPreference.vibrationEnabled) {
+            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManger = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManger.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+        }
+
+        if (currentPreference.soundEnabled) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
+                    toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2, 100)
+                    delay(100)
+                    toneGenerator.release()
+                } catch (_: Exception) {
+                }
+            }
+        }
+    }
+
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
@@ -198,15 +248,12 @@ class PushupViewModel @Inject constructor(
                     it.copy(errorMessage = e.message)
                 }
             }
-
-            lastCountTime = 0L
         }
     }
 
 
     companion object {
         const val DEBOUNCE = 1000L
-        const val SENSOR_TIMEOUT = 1000L
         const val TIMER_INTERVAL = 1000L
         const val MILLIS_PER_SECOND = 1000
     }
