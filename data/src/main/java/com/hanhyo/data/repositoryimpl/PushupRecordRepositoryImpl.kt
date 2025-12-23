@@ -1,16 +1,20 @@
 package com.hanhyo.data.repositoryimpl
 
+import android.content.Context
+import com.hanhyo.data.R
 import com.hanhyo.data.local.datasource.PushupLocalDataSource
 import com.hanhyo.data.local.entity.PushupSessionEntity
 import com.hanhyo.data.mapper.toDomain
 import com.hanhyo.domain.model.PushupSession
 import com.hanhyo.domain.model.PushupType
 import com.hanhyo.domain.repository.PushupRecordRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PushupRecordRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val pushupLocalDataSource: PushupLocalDataSource
 ) : PushupRecordRepository {
 
@@ -30,8 +34,8 @@ class PushupRecordRepositoryImpl @Inject constructor(
 
     override suspend fun updateSession(sessionId: Long, count: Int) {
         pushupLocalDataSource.getSessionById(sessionId)?.let { session ->
-            val durationMin = (System.currentTimeMillis() - session.startTime) / 1000f / 60f
-            val calories = (durationMin * 0.04).toInt()
+            val durationMin = (System.currentTimeMillis() - session.startTime) / MILLIS_PER_SECOND / SECONDS_PER_MINUTE
+            val calories = (durationMin * CALORIES_PER_MINUTE).toInt()
 
             return pushupLocalDataSource.updateSession(
                 session.copy(
@@ -57,5 +61,11 @@ class PushupRecordRepositoryImpl @Inject constructor(
         return pushupLocalDataSource.observeSessions().map { entities ->
             entities.map { it.toDomain() }
         }
+    }
+
+    companion object {
+        private const val MILLIS_PER_SECOND = 1000f
+        private const val SECONDS_PER_MINUTE = 60f
+        private const val CALORIES_PER_MINUTE = 0.04
     }
 }

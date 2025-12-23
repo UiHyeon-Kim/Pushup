@@ -35,7 +35,7 @@ fun PushupRecordScreen(
             )
         }
 
-        items(sessions) { session ->
+        items(sessions, key = { it.id!! }) { session ->
             SessionCard(session = session)
             Spacer(modifier = Modifier.height(8.dp))
         }

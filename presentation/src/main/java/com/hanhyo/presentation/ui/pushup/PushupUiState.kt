@@ -10,5 +10,5 @@ data class PushupUiState(
     val isSessionActive: Boolean = false,
     val pushupState: PushupState = PushupState.Unknown,
     val isSensorAvailable: Boolean = true,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
