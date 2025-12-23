@@ -111,7 +111,15 @@ class PushupViewModel @Inject constructor(
                         _uiState.update { it.copy(currentCount = it.currentCount + 1) }
                         lastCountTime = now
 
-                        _uiState.value.sessionId?.let { updateSessionUseCase(it, 1) }
+                        provideFeedback()
+
+                        _uiState.value.sessionId?.let { sessionId ->
+                            try {
+                                updateSessionUseCase(sessionId, 1)
+                            } catch (e: IllegalStateException) {
+                                Log.e("PushupViewModel", "세션을 업데이트 중 오류 발생: ${e.message}")
+                            }
+                        }
                     }
 
                     lastState = currentState

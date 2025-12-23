@@ -42,7 +42,6 @@ class PushupRecordRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun endSession(sessionId: Long) {
         pushupLocalDataSource.getSessionById(sessionId)?.let { session ->
             pushupLocalDataSource.updateSession(
@@ -51,7 +50,7 @@ class PushupRecordRepositoryImpl @Inject constructor(
                     isCompleted = true,
                 )
             )
-        }
+        } ?: throw IllegalStateException(context.getString(R.string.error_session_not_found))
     }
 
     override fun observeSessions(): Flow<List<PushupSession>> {

@@ -28,15 +28,26 @@ class SettingViewModel @Inject constructor(
 
     private fun observePreference() {
         viewModelScope.launch {
-            observePreferenceUseCase().collect { preference ->
-                _uiState.update {
-                    it.copy(
-                        vibrationEnabled = preference.vibrationEnabled,
-                        soundEnabled = preference.soundEnabled,
-                        isLoadings = false
-                    )
+            observePreferenceUseCase()
+                .catch { e ->
+                    _uiState.update {
+                        it.copy(
+                            vibrationEnabled = it.vibrationEnabled,
+                            soundEnabled = it.soundEnabled,
+                            isLoading = false
+                        )
+                    }
+                    e.printStackTrace()
                 }
-            }
+                .collect { preference ->
+                    _uiState.update {
+                        it.copy(
+                            vibrationEnabled = preference.vibrationEnabled,
+                            soundEnabled = preference.soundEnabled,
+                            isLoading = false
+                        )
+                    }
+                }
         }
     }
 
