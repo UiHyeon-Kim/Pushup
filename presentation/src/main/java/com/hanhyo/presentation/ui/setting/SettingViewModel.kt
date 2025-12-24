@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.usecase.ObservePreferenceUseCase
 import com.hanhyo.domain.usecase.UpdatePreferenceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationException
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -32,6 +35,11 @@ class SettingViewModel @Inject constructor(
     private fun observePreference() {
         viewModelScope.launch {
             observePreferenceUseCase()
+                .retry(3) { e ->
+                    Timber.tag("SettingViewModel-observePreference").e(e, "설정 관찰 재시도 중")
+                    delay(1000)
+                    true
+                }
                 .catch { e ->
                     _uiState.update { it.copy(isLoading = false) }
                     Timber.tag("SettingViewModel-observePreference").e(e, "설정을 가져오는 중 오류 발생")
@@ -48,23 +56,30 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun updateVibrationEnabled(enabled: Boolean) {
+    private fun updatePreference(
+        settingName: String,
+        update: suspend () -> Unit
+    ) {
         viewModelScope.launch {
             try {
-                updatePreferenceUseCase.updateVibration(enabled)
+                update()
             } catch (e: IOException) {
-                Timber.tag("SettingViewModel-updateVibrationEnabled").e(e, "설정을 업데이트 중 오류 발생")
+                Timber.tag("SettingViewModel-$settingName").e(e, "설정을 업데이트 중 오류 발생")
+            } catch (e: SerializationException) {
+                Timber.tag("SettingViewModel-$settingName").e(e, "직렬화 오류 발생")
             }
         }
     }
 
+    fun updateVibrationEnabled(enabled: Boolean) {
+        updatePreference("updateVibrationEnabled") {
+            updatePreferenceUseCase.updateVibration(enabled)
+        }
+    }
+
     fun updateSoundEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            try {
-                updatePreferenceUseCase.updateSound(enabled)
-            } catch (e: IOException) {
-                Timber.tag("SettingViewModel-updateSoundEnabled").e(e, "설정을 업데이트 중 오류 발생")
-            }
+        updatePreference("updateSoundEnabled") {
+            updatePreferenceUseCase.updateSound(enabled)
         }
     }
 }

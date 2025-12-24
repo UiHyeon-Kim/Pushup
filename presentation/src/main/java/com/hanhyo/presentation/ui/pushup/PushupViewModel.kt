@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,8 +69,10 @@ class PushupViewModel @Inject constructor(
                 observePreferenceUseCase().collect { preference ->
                     currentPreference = preference
                 }
-            } catch (e: IllegalStateException) {
+            } catch (e: IOException) {
                 Timber.tag("PushupViewModel-observePreferences").e(e, "설정 로드 실패 기본값 사용: ${e.message}")
+            } catch (e: Exception) {
+                Timber.tag("PushupViewModel-observePreferences").e(e, "예상치 못한 오류: ${e.message}")
             }
         }
     }
@@ -162,6 +165,8 @@ class PushupViewModel @Inject constructor(
 
     private fun provideFeedback() {
         if (currentPreference.vibrationEnabled) {
+
+            @Suppress("TooGenericExceptionCaught")
             try {
                 val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     val vibratorManager =
@@ -169,7 +174,7 @@ class PushupViewModel @Inject constructor(
                     vibratorManager?.defaultVibrator
                 } else {
                     @Suppress("DEPRECATION")
-                    application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                    application.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
                 }
 
                 vibrator?.vibrate(
@@ -188,6 +193,7 @@ class PushupViewModel @Inject constructor(
             viewModelScope.launch(Dispatchers.IO) {
                 var toneGenerator: ToneGenerator? = null
 
+                @Suppress("TooGenericExceptionCaught")
                 try {
                     toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, TONE_VOLUME)
                     toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, TONE_DURATION_MS.toInt())
@@ -239,7 +245,10 @@ class PushupViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isSessionActive = false,
-                        errorMessage = application.getString(R.string.error_session_stop_failed, e.message)
+                        errorMessage = application.getString(
+                            R.string.error_session_reset_failed,
+                            e.message ?: "Unknown error"
+                        )
                     )
                 }
             }

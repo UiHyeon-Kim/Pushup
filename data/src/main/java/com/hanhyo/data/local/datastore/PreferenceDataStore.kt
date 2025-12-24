@@ -40,10 +40,10 @@ class PreferenceDataStore @Inject constructor(
             }
         } catch (e: IOException) {
             Timber.tag("PreferenceDataStore-updateVibration").e(e, "진동 설정을 업데이트하지 못했습니다")
-            error("설정 업데이트 중 오류 발생${e.message}")
+            throw e
         } catch (e: CorruptionException) {
             Timber.tag("PreferenceDataStore-updateVibration").e(e, "진동을 업데이트하는 동안 데이터 저장소가 손상되었습니다")
-            error("데이터 저장소가 손상: ${e.message}")
+            throw e
         }
     }
 
@@ -54,10 +54,10 @@ class PreferenceDataStore @Inject constructor(
             }
         } catch (e: IOException) {
             Timber.tag("PreferenceDataStore-updateSound").e(e, "설정 업데이트 중 오류 발생")
-            error("설정 업데이트 중 오류 발생${e.message}")
+            throw e
         } catch (e: CorruptionException) {
             Timber.tag("PreferenceDataStore-updateSound").e(e, "설정 업데이트 중 오류 발생")
-            error("데이터 저장소가 손상: ${e.message}")
+            throw e
         }
     }
 
