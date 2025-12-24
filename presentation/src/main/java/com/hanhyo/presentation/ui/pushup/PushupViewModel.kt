@@ -166,15 +166,15 @@ class PushupViewModel @Inject constructor(
                 application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             }
 
-            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+            vibrator.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION_MS, VibrationEffect.DEFAULT_AMPLITUDE))
         }
 
         if (currentPreference.soundEnabled) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
-                    toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2, 100)
-                    delay(100)
+                    val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, TONE_VOLUME)
+                    toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2, TONE_DURATION_MS.toInt())
+                    delay(TONE_DURATION_MS)
                     toneGenerator.release()
                 } catch (e: IllegalStateException) {
                     Timber.tag("PushupViewModel-provideFeedback").e("톤 생성 실패: ${e.message}")
@@ -257,5 +257,10 @@ class PushupViewModel @Inject constructor(
         const val DEBOUNCE = 1000L
         const val TIMER_INTERVAL = 1000L
         const val MILLIS_PER_SECOND = 1000
+
+        // Feedback constants
+        private const val VIBRATION_DURATION_MS = 100L
+        private const val TONE_VOLUME = 100
+        private const val TONE_DURATION_MS = 100L
     }
 }
