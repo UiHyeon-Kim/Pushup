@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PushupRecordRepositoryImpl @Inject constructor(
-    private val context: Context,
     private val pushupLocalDataSource: PushupLocalDataSource
 ) : PushupRecordRepository {
 

@@ -13,7 +13,6 @@ import com.hanhyo.domain.repository.PushupSensorRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -25,11 +24,8 @@ object RepositoryModule {
         PushupSensorRepositoryImpl(proximitySensorDataSource)
 
     @Provides
-    fun providePushupRecordRepository(
-        @ApplicationContext context: Context,
-        pushupLocalDataSource: PushupLocalDataSource
-    ): PushupRecordRepository =
-        PushupRecordRepositoryImpl(context, pushupLocalDataSource)
+    fun providePushupRecordRepository(pushupLocalDataSource: PushupLocalDataSource): PushupRecordRepository =
+        PushupRecordRepositoryImpl(pushupLocalDataSource)
 
     @Provides
     fun providePreferenceRepository(preferenceDataStore: PreferenceDataStore): PreferenceRepository =
