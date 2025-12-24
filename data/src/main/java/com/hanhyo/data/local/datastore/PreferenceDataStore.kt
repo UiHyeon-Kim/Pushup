@@ -43,7 +43,7 @@ class PreferenceDataStore @Inject constructor(
         }
     }
 
-    companion object Keys {
+    companion object {
         val VIBRATION = booleanPreferencesKey("vibration")
         val SOUND = booleanPreferencesKey("sound")
     }

@@ -159,8 +159,8 @@ class PushupViewModel @Inject constructor(
     private fun provideFeedback() {
         if (currentPreference.vibrationEnabled) {
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val vibratorManger = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                vibratorManger.defaultVibrator
+                val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
             } else {
                 @Suppress("DEPRECATION")
                 application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
