@@ -8,13 +8,12 @@ import com.hanhyo.data.mapper.toDomain
 import com.hanhyo.domain.model.PushupSession
 import com.hanhyo.domain.model.PushupType
 import com.hanhyo.domain.repository.PushupRecordRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PushupRecordRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     private val pushupLocalDataSource: PushupLocalDataSource
 ) : PushupRecordRepository {
 
