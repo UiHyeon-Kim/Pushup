@@ -176,7 +176,7 @@ class PushupViewModel @Inject constructor(
                     toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2, 100)
                     delay(100)
                     toneGenerator.release()
-                } catch (e: Exception) {
+                } catch (e: IllegalStateException) {
                     Timber.tag("PushupViewModel-provideFeedback").e("톤 생성 실패: ${e.message}")
                 }
             }

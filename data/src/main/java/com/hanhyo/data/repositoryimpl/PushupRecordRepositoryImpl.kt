@@ -1,7 +1,5 @@
 package com.hanhyo.data.repositoryimpl
 
-import android.content.Context
-import com.hanhyo.data.R
 import com.hanhyo.data.local.datasource.PushupLocalDataSource
 import com.hanhyo.data.local.entity.PushupSessionEntity
 import com.hanhyo.data.mapper.toDomain
@@ -31,8 +29,7 @@ class PushupRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateSession(sessionId: Long, count: Int) {
-        val session = pushupLocalDataSource.getSessionById(sessionId)
-            ?: throw IllegalStateException(context.getString(R.string.error_session_not_found))
+        val session = pushupLocalDataSource.getSessionById(sessionId) ?: throw IllegalStateException()
 
         val durationMin = (System.currentTimeMillis() - session.startTime) / MILLIS_PER_SECOND / SECONDS_PER_MINUTE
         val calories = (durationMin * CALORIES_PER_MINUTE).toInt()
@@ -53,7 +50,7 @@ class PushupRecordRepositoryImpl @Inject constructor(
                     isCompleted = true,
                 )
             )
-        } ?: throw IllegalStateException(context.getString(R.string.error_session_not_found))
+        } ?: throw IllegalStateException()
     }
 
     override fun observeSessions(): Flow<List<PushupSession>> {

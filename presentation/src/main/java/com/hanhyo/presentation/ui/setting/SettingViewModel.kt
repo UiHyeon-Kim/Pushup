@@ -32,14 +32,8 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             observePreferenceUseCase()
                 .catch { e ->
-                    _uiState.update {
-                        it.copy(
-                            vibrationEnabled = it.vibrationEnabled,
-                            soundEnabled = it.soundEnabled,
-                            isLoading = false
-                        )
-                    }
-                    Timber.tag("SettingViewModel-observePreference").e("설정을 가져오는 중 오류 발생: ${e.message}")
+                    _uiState.update { it.copy(isLoading = false) }
+                    Timber.tag("SettingViewModel-observePreference").e(e, "설정을 가져오는 중 오류 발생")
                 }
                 .collect { preference ->
                     _uiState.update {
@@ -57,8 +51,8 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updatePreferenceUseCase.updateVibration(enabled)
-            } catch (e: IllegalStateException) {
-                Timber.tag("SettingViewModel-updateVibrationEnabled").e("설정을 업데이트 중 오류 발생: ${e.message}")
+            } catch (e: Exception) {
+                Timber.tag("SettingViewModel-updateVibrationEnabled").e(e, "설정을 업데이트 중 오류 발생")
             }
         }
     }
@@ -67,8 +61,8 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updatePreferenceUseCase.updateSound(enabled)
-            } catch (e: IllegalStateException) {
-                Timber.tag("SettingViewModel-updateSoundEnabled").e("설정을 업데이트 중 오류 발생: ${e.message}")
+            } catch (e: Exception) {
+                Timber.tag("SettingViewModel-updateSoundEnabled").e(e, "설정을 업데이트 중 오류 발생")
             }
         }
     }
