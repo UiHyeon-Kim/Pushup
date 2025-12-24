@@ -71,8 +71,6 @@ class PushupViewModel @Inject constructor(
                 }
             } catch (e: IOException) {
                 Timber.tag("PushupViewModel-observePreferences").e(e, "설정 로드 실패 기본값 사용: ${e.message}")
-            } catch (e: Exception) {
-                Timber.tag("PushupViewModel-observePreferences").e(e, "예상치 못한 오류: ${e.message}")
             }
         }
     }

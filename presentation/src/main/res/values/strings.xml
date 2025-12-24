@@ -12,5 +12,5 @@
     <string name="error_sensor_monitoring">Sensor monitoring error: %1$s</string>
     <string name="error_count_monitoring">Count monitoring error: %1$s</string>
     <string name="error_session_stop_failed">Failed to stop session: %1$s</string>
-    <string name="error_session_reset_failed">session reset failed: %1$s</string>
+    <string name="error_session_reset_failed">Session reset failed: %1$s</string>
 </resources>

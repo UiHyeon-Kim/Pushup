@@ -12,5 +12,5 @@
     <string name="error_sensor_monitoring">센서 모니터링 오류: %1$s</string>
     <string name="error_count_monitoring">카운트 모니터링 오류: %1$s</string>
     <string name="error_session_stop_failed">세션 종료 실패: %1$s</string>
-    <string name="error_session_reset_failed">세션 리셋 실패: %1$s</string>
+    <string name="error_session_reset_failed">세션 초기화 실패: %1$s</string>
 </resources>

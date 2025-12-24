@@ -62,6 +62,6 @@ class PushupRecordRepositoryImpl @Inject constructor(
     companion object {
         private const val MILLIS_PER_SECOND = 1000f
         private const val SECONDS_PER_MINUTE = 60f
-        private const val CALORIES_PER_MINUTE = 0.04
+        private const val CALORIES_PER_MINUTE = 7.5
     }
 }
