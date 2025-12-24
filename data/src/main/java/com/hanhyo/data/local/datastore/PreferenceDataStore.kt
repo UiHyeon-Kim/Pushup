@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 private val Context.dataStore by preferencesDataStore(name = "preferences")
@@ -19,7 +20,10 @@ class PreferenceDataStore @Inject constructor(
 ) {
 
     val preference: Flow<UserPreference> = context.dataStore.data
-        .catch { emit(emptyPreferences()) }
+        .catch {
+            Timber.e(it)
+            emit(emptyPreferences())
+        }
         .map { preferences ->
             UserPreference(
                 vibrationEnabled = preferences[VIBRATION] ?: true,

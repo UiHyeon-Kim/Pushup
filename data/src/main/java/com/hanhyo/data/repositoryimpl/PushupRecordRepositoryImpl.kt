@@ -33,17 +33,18 @@ class PushupRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateSession(sessionId: Long, count: Int) {
-        pushupLocalDataSource.getSessionById(sessionId)?.let { session ->
-            val durationMin = (System.currentTimeMillis() - session.startTime) / MILLIS_PER_SECOND / SECONDS_PER_MINUTE
-            val calories = (durationMin * CALORIES_PER_MINUTE).toInt()
+        val session = pushupLocalDataSource.getSessionById(sessionId)
+            ?: throw IllegalStateException(context.getString(R.string.error_session_not_found))
 
-            return pushupLocalDataSource.updateSession(
-                session.copy(
-                    totalCount = session.totalCount + count,
-                    calories = calories,
-                )
+        val durationMin = (System.currentTimeMillis() - session.startTime) / MILLIS_PER_SECOND / SECONDS_PER_MINUTE
+        val calories = (durationMin * CALORIES_PER_MINUTE).toInt()
+
+        return pushupLocalDataSource.updateSession(
+            session.copy(
+                totalCount = session.totalCount + count,
+                calories = calories,
             )
-        }
+        )
     }
 
     override suspend fun endSession(sessionId: Long) {

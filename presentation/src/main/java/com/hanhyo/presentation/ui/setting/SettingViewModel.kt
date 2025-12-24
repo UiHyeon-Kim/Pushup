@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +39,7 @@ class SettingViewModel @Inject constructor(
                             isLoading = false
                         )
                     }
-                    e.printStackTrace()
+                    Timber.tag("SettingViewModel-observePreference").e("설정을 가져오는 중 오류 발생: ${e.message}")
                 }
                 .collect { preference ->
                     _uiState.update {
@@ -54,13 +55,21 @@ class SettingViewModel @Inject constructor(
 
     fun updateVibrationEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            updatePreferenceUseCase.updateVibration(enabled)
+            try {
+                updatePreferenceUseCase.updateVibration(enabled)
+            } catch (e: IllegalStateException) {
+                Timber.tag("SettingViewModel-updateVibrationEnabled").e("설정을 업데이트 중 오류 발생: ${e.message}")
+            }
         }
     }
 
     fun updateSoundEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            updatePreferenceUseCase.updateSound(enabled)
+            try {
+                updatePreferenceUseCase.updateSound(enabled)
+            } catch (e: IllegalStateException) {
+                Timber.tag("SettingViewModel-updateSoundEnabled").e("설정을 업데이트 중 오류 발생: ${e.message}")
+            }
         }
     }
 }

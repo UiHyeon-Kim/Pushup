@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupState
@@ -30,6 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -141,7 +141,7 @@ class PushupViewModel @Inject constructor(
                             try {
                                 updateSessionUseCase(sessionId, 1)
                             } catch (e: IllegalStateException) {
-                                Log.e("PushupViewModel", "세션을 업데이트 중 오류 발생: ${e.message}")
+                                Timber.tag("PushupViewModel-startPushupMonitoring").e("세션을 업데이트 중 오류 발생: ${e.message}")
                             }
                         }
                     }
@@ -176,7 +176,8 @@ class PushupViewModel @Inject constructor(
                     toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2, 100)
                     delay(100)
                     toneGenerator.release()
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    Timber.tag("PushupViewModel-provideFeedback").e("톤 생성 실패: ${e.message}")
                 }
             }
         }
