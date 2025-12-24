@@ -29,7 +29,7 @@ class PushupRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateSession(sessionId: Long, count: Int) {
-        val session = pushupLocalDataSource.getSessionById(sessionId) ?: throw IllegalStateException()
+        val session = pushupLocalDataSource.getSessionById(sessionId) ?: error("세션을 찾을 수 없습니다: sessionId=\$sessionId")
 
         val durationMin = (System.currentTimeMillis() - session.startTime) / MILLIS_PER_SECOND / SECONDS_PER_MINUTE
         val calories = (durationMin * CALORIES_PER_MINUTE).toInt()
@@ -43,14 +43,14 @@ class PushupRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun endSession(sessionId: Long) {
-        pushupLocalDataSource.getSessionById(sessionId)?.let { session ->
-            pushupLocalDataSource.updateSession(
-                session.copy(
-                    endTime = System.currentTimeMillis(),
-                    isCompleted = true,
-                )
+        val session = pushupLocalDataSource.getSessionById(sessionId) ?: error("세션을 찾을 수 없습니다: sessionId=\$sessionId")
+
+        pushupLocalDataSource.updateSession(
+            session.copy(
+                endTime = System.currentTimeMillis(),
+                isCompleted = true,
             )
-        } ?: throw IllegalStateException()
+        )
     }
 
     override fun observeSessions(): Flow<List<PushupSession>> {

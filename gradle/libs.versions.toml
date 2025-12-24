@@ -84,7 +84,7 @@ mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
-# Ligging
+# Logging
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]

@@ -22,8 +22,8 @@ class PreferenceDataStore @Inject constructor(
 ) {
 
     val preference: Flow<UserPreference> = context.dataStore.data
-        .catch {
-            Timber.tag("PreferenceDataStore").e(it.message)
+        .catch { e ->
+            Timber.tag("PreferenceDataStore").e(e, "설정을 가져오는 중 오류 발생")
             emit(emptyPreferences())
         }
         .map { preferences ->
@@ -39,8 +39,11 @@ class PreferenceDataStore @Inject constructor(
                 prefer[VIBRATION] = enabled
             }
         } catch (e: IOException) {
-            Timber.tag("PreferenceDataStore-updateVibration").e(e.message)
-            throw IllegalStateException()
+            Timber.tag("PreferenceDataStore-updateVibration").e(e, "진동 설정을 업데이트하지 못했습니다")
+            error("설정 업데이트 중 오류 발생${e.message}")
+        } catch (e: CorruptionException) {
+            Timber.tag("PreferenceDataStore-updateVibration").e(e, "진동을 업데이트하는 동안 데이터 저장소가 손상되었습니다")
+            error("데이터 저장소가 손상: ${e.message}")
         }
     }
 
@@ -50,11 +53,11 @@ class PreferenceDataStore @Inject constructor(
                 prefer[SOUND] = enabled
             }
         } catch (e: IOException) {
-            Timber.tag("PreferenceDataStore-updateSound").e(e, e.message)
-            throw IllegalStateException()
+            Timber.tag("PreferenceDataStore-updateSound").e(e, "설정 업데이트 중 오류 발생")
+            error("설정 업데이트 중 오류 발생${e.message}")
         } catch (e: CorruptionException) {
-            Timber.tag("PreferenceDataStore-updateSound").e(e, e.message)
-            throw IllegalStateException()
+            Timber.tag("PreferenceDataStore-updateSound").e(e, "설정 업데이트 중 오류 발생")
+            error("데이터 저장소가 손상: ${e.message}")
         }
     }
 

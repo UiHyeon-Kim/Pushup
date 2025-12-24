@@ -1,6 +1,5 @@
 package com.hanhyo.data.di
 
-import android.content.Context
 import com.hanhyo.data.local.datasource.PushupLocalDataSource
 import com.hanhyo.data.local.datastore.PreferenceDataStore
 import com.hanhyo.data.repositoryimpl.PreferenceRepositoryImpl

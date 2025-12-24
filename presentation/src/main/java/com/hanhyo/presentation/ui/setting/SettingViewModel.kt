@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +52,7 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updatePreferenceUseCase.updateVibration(enabled)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 Timber.tag("SettingViewModel-updateVibrationEnabled").e(e, "설정을 업데이트 중 오류 발생")
             }
         }
@@ -61,7 +62,7 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updatePreferenceUseCase.updateSound(enabled)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 Timber.tag("SettingViewModel-updateSoundEnabled").e(e, "설정을 업데이트 중 오류 발생")
             }
         }

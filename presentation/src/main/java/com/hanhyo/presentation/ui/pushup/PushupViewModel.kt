@@ -64,8 +64,12 @@ class PushupViewModel @Inject constructor(
 
     private fun observePreferences() {
         viewModelScope.launch {
-            observePreferenceUseCase().collect { preference ->
-                currentPreference = preference
+            try {
+                observePreferenceUseCase().collect { preference ->
+                    currentPreference = preference
+                }
+            } catch (e: IllegalStateException) {
+                Timber.tag("PushupViewModel-observePreferences").e(e, "설정 로드 실패 기본값 사용: ${e.message}")
             }
         }
     }
@@ -158,26 +162,42 @@ class PushupViewModel @Inject constructor(
 
     private fun provideFeedback() {
         if (currentPreference.vibrationEnabled) {
-            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                vibratorManager.defaultVibrator
-            } else {
-                @Suppress("DEPRECATION")
-                application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            }
+            try {
+                val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val vibratorManager =
+                        application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+                    vibratorManager?.defaultVibrator
+                } else {
+                    @Suppress("DEPRECATION")
+                    application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                }
 
-            vibrator.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION_MS, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator?.vibrate(
+                    VibrationEffect.createOneShot(
+                        VIBRATION_DURATION_MS,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
+
+            } catch (e: IllegalStateException) {
+                Timber.tag("PushupViewModel-provideFeedback").e("진동 생성 실패: ${e.message}")
+            }
         }
 
         if (currentPreference.soundEnabled) {
             viewModelScope.launch(Dispatchers.IO) {
+                var toneGenerator: ToneGenerator? = null
+
                 try {
-                    val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, TONE_VOLUME)
-                    toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP2, TONE_DURATION_MS.toInt())
+                    toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, TONE_VOLUME)
+                    toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, TONE_DURATION_MS.toInt())
                     delay(TONE_DURATION_MS)
-                    toneGenerator.release()
                 } catch (e: IllegalStateException) {
                     Timber.tag("PushupViewModel-provideFeedback").e("톤 생성 실패: ${e.message}")
+                } catch (e: RuntimeException) {
+                    Timber.tag("PushupViewModel-provideFeedback").e("톤 생성 실패: ${e.message}")
+                } finally {
+                    toneGenerator?.release()
                 }
             }
         }
@@ -259,8 +279,8 @@ class PushupViewModel @Inject constructor(
         const val MILLIS_PER_SECOND = 1000
 
         // Feedback constants
-        private const val VIBRATION_DURATION_MS = 100L
-        private const val TONE_VOLUME = 100
-        private const val TONE_DURATION_MS = 100L
+        private const val VIBRATION_DURATION_MS = 200L
+        private const val TONE_VOLUME = 1000
+        private const val TONE_DURATION_MS = 1000L
     }
 }
