@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 에러 관련 -->
+    <string name="error_proximity_sensor_not_found">Proximity sensor not available</string>
     <string name="error_session_not_found">Session not found</string>
 </resources>
