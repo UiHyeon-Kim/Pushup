@@ -287,7 +287,7 @@ class PushupViewModel @Inject constructor(
 
         // Feedback constants
         private const val VIBRATION_DURATION_MS = 200L
-        private const val TONE_VOLUME = 1000
-        private const val TONE_DURATION_MS = 1000L
+        private const val TONE_VOLUME = 100
+        private const val TONE_DURATION_MS = 100L
     }
 }
