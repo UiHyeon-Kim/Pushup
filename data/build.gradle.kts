@@ -44,7 +44,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // Koin
-    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 
     // Datastore
     implementation(libs.datastore.preferences)
