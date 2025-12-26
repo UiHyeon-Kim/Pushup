@@ -7,15 +7,13 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import com.hanhyo.data.R
 import com.hanhyo.domain.model.PushupState
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import javax.inject.Inject
 
-class ProximitySensorDataSource @Inject constructor(
-    @ApplicationContext private val context: Context,
+class ProximitySensorDataSource(
+    private val context: Context,
 ) : SensorDataSource {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)

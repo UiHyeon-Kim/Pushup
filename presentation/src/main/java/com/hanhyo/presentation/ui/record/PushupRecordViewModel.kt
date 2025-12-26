@@ -4,16 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.model.PushupSession
 import com.hanhyo.domain.repository.PushupRecordRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class PushupRecordViewModel @Inject constructor(
+class PushupRecordViewModel(
     private val repository: PushupRecordRepository
 ) : ViewModel() {
     val sessions: StateFlow<List<PushupSession>> =

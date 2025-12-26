@@ -4,9 +4,8 @@ import com.hanhyo.data.local.datastore.PreferenceDataStore
 import com.hanhyo.domain.model.UserPreference
 import com.hanhyo.domain.repository.PreferenceRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class PreferenceRepositoryImpl @Inject constructor(
+class PreferenceRepositoryImpl(
     private val preferenceDataStore: PreferenceDataStore
 ) : PreferenceRepository {
 

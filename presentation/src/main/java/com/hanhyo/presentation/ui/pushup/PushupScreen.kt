@@ -11,16 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.hanhyo.domain.model.PushupState
 import com.hanhyo.presentation.designsystem.theme.PushupTheme
 import com.hanhyo.presentation.ui.pushup.components.ControlButtons
 import com.hanhyo.presentation.ui.pushup.components.PushupCountCard
 import com.hanhyo.presentation.ui.pushup.components.SensorStateCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PushupScreen(
-    viewModel: PushupViewModel = hiltViewModel()
+    viewModel: PushupViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

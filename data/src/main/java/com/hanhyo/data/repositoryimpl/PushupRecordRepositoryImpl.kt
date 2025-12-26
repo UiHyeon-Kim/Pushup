@@ -8,9 +8,8 @@ import com.hanhyo.domain.model.PushupType
 import com.hanhyo.domain.repository.PushupRecordRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class PushupRecordRepositoryImpl @Inject constructor(
+class PushupRecordRepositoryImpl(
     private val pushupLocalDataSource: PushupLocalDataSource
 ) : PushupRecordRepository {
 
