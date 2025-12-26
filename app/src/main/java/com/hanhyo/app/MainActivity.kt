@@ -1,4 +1,4 @@
-package com.hanhyo.presentation
+package com.hanhyo.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
