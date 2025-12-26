@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Pushup</string>
     <string name="sensor_state_title">센서 상태</string>
     <string name="sensor_state_on">켜짐</string>
     <string name="sensor_state_unknown">알 수 없음</string>
