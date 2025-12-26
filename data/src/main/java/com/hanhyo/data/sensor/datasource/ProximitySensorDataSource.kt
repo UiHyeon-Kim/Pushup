@@ -37,7 +37,7 @@ class ProximitySensorDataSource @Inject constructor(
             override fun onSensorChanged(event: SensorEvent?) {
                 event?.let {
                     if (it.sensor.type == Sensor.TYPE_PROXIMITY) {
-                        val distance = it.values[0]
+                        val distance = it.values[0] // 거리는 2진 값으로 반환 됨
 
                         val state = if (distance < proximityThreshold) PushupState.Near else PushupState.Far
                         trySend(state)

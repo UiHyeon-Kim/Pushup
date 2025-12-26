@@ -19,6 +19,22 @@ fun HomeScreen(
         ) {
             Text("go pushup")
         }
+
+        Button(
+            onClick = {
+                navController.navigate(Route.RECORD)
+            }
+        ) {
+            Text("go record")
+        }
+
+        Button(
+            onClick = {
+                navController.navigate(Route.SETTING)
+            }
+        ) {
+            Text("go setting")
+        }
     }
 }
 
