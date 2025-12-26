@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
@@ -59,7 +58,6 @@ dependencies {
 
     // 모듈 의존성
     implementation(project(":domain"))
-    implementation(project(":data"))
 
     // Android Core
     implementation(libs.androidx.core.ktx)
@@ -88,12 +86,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.mockk.android)
-    androidTestImplementation(libs.hilt.android.testing)
 
-    // Hilt
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
+    // Koin
+    implementation(libs.koin.androidx.compose)
 
     // Coroutine, Flow
     implementation(libs.kotlinx.coroutines.android)
