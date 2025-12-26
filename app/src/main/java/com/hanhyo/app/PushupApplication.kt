@@ -1,7 +1,11 @@
 package com.hanhyo.app
 
 import android.app.Application
+import com.hanhyo.data.di.dataSourceModule
 import com.hanhyo.data.di.databaseModule
+import com.hanhyo.data.di.repositoryModule
+import com.hanhyo.domain.di.useCaseModule
+import com.hanhyo.presentation.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -22,7 +26,11 @@ class PushupApplication : Application() {
             androidLogger(loggerLevel)
             androidContext(this@PushupApplication)
             modules(
-                databaseModule
+                databaseModule,
+                dataSourceModule,
+                repositoryModule,
+                useCaseModule,
+                viewModelModule
             )
         }
     }
