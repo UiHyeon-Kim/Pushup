@@ -1,4 +1,5 @@
 pluginManagement {
+//    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -20,6 +21,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Pushup"
+include(":app")
 include(":presentation")
 include(":domain")
 include(":data")

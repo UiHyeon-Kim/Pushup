@@ -1,4 +1,4 @@
-package com.hanhyo.presentation
+package com.hanhyo.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
