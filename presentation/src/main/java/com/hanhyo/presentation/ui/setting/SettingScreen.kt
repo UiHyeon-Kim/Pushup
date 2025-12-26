@@ -10,14 +10,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.hanhyo.presentation.designsystem.theme.PushupTheme
 import com.hanhyo.presentation.ui.setting.components.SettingSection
 import com.hanhyo.presentation.ui.setting.components.SwitchSettingItem
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel = hiltViewModel(),
+    viewModel: SettingViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

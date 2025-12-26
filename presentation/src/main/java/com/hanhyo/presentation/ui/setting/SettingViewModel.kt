@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanhyo.domain.usecase.ObservePreferenceUseCase
 import com.hanhyo.domain.usecase.UpdatePreferenceUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,10 +15,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import timber.log.Timber
 import java.io.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingViewModel @Inject constructor(
+class SettingViewModel(
     private val updatePreferenceUseCase: UpdatePreferenceUseCase,
     private val observePreferenceUseCase: ObservePreferenceUseCase,
 ) : ViewModel() {

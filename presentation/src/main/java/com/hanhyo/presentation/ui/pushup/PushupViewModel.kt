@@ -20,7 +20,6 @@ import com.hanhyo.domain.usecase.ObservePushupStateUseCase
 import com.hanhyo.domain.usecase.StartSessionUseCase
 import com.hanhyo.domain.usecase.UpdateSessionUseCase
 import com.hanhyo.presentation.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -31,10 +30,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class PushupViewModel @Inject constructor(
+class PushupViewModel(
     private val application: Application,
     private val observePushupStateUseCase: ObservePushupStateUseCase,
     private val startSessionUseCase: StartSessionUseCase,
